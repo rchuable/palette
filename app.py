@@ -19,17 +19,30 @@ from io import BytesIO
 # App setup
 app = Flask(__name__)
 
-# Function to get color palette from an image URL
+# FUNCTIONS ---
+# get color palette from an image URL
 def get_color_palette(url, color_count=5):
-    response = requests.get(url)
-    img = BytesIO(response.content)
-    color_thief = ColorThief(img)
+    try:
+        response = requests.get(url)
+        
+        # Handling invalid URLs
+        response.raise_for_status()
 
-    palette = color_thief.get_palette(color_count=color_count)
-    hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
+        # Get image and apply color thief
+        img = BytesIO(response.content)
+        color_thief = ColorThief(img)
 
-    return hex_palette
-    
+        # Get palette and hex code
+        palette = color_thief.get_palette(color_count=color_count)
+        hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
+
+        return hex_palette
+
+    # White palette if error
+    except requests.exceptions.RequestException:
+        return["#FFFFFF"] * color_count
+
+
 # Homepage
 @app.route("/", methods=['GET', 'POST'])
 def home():
