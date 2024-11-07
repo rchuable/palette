@@ -1,16 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
- <head>
+    
+<head>
     <meta charset="UTF-8">
-    <title>Palette Detector</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Palette Extractor</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
-    <h1>Welcome to Regina's Palette Detector!</h1>
-    <form action="/" method="post">
-        <label for="image_url">Enter Image URL:</label>
+    <h1>Palette Extractor by Regina Chua</h1>
+
+    <!-- Form to enter image URL -->
+    <form method="POST">
+        <label for="image_url">Image URL:</label>
         <input type="text" id="image_url" name="image_url" required>
-        <button type="Submit">Detect Palette</button>
+        <button type="submit">Generate Palette</button>
     </form>
+
+    <!-- Display the generated color palette -->
+    {% if colors %}
+        <h2>Generated Color Palette:</h2>
+        <div style="display: flex;">
+            {% for color in colors %}
+                <div style="width: 50px; height: 50px; background-color: {{ color }};"></div>
+            {% endfor %}
+        </div>
+        <ul>
+            {% for color in colors %}
+                <li>{{ color }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 </body>
 </html>

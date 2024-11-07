@@ -2,52 +2,43 @@
 Project:    CS50 Week 10
 Author:     Regina Chua
 Note:       This project will basically run pylette in a flask web app.
+References: 
+https://github.com/qTipTip/Pylette
+https://pytutorial.com/how-to-solve-modulenotfounderror-no-module-named-in-python/
+https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-the-dominant-color-of-multiple-images
 '''
 
 # Import modules
-import requests
 from flask import Flask, render_template, request, redirect, url_for
-from pylette import Palette
+#from pylette import Palette
+#from PIL import Image
+from colorthief import ColorThief
+import requests
 from io import BytesIO
-from PIL import Image
 
 # App setup
 app = Flask(__name__)
 
-# Homepage
-@app.route("/")
-def index():
-    return render_template("index.html")
+# Function to get color palette from an image URL
+def get_color_palette(url, color_count=5):
+    response = requests.get(url)
+    img = BytesIO(response.content)
+    color_thief = ColorThief(img)
 
-# Extractor
-@app.route("/extract_palette", methods=["POST"])
-def extract_palette():
-    image_url = request.form.get("image_url")
+    palette = color_thief.get_palette(color_count=color_count)
+    hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
 
-    if not image_url:
-        flash("Please provide an image URL.")
-        return redirect(url_for("index"))
-
-    # Download the image from the URL
-    try:
-        response = requests.get(image_url)
-        image = Image.open(BytesIO(response.content))
-    except Exception as e:
-        flash("Could not load image from URL.")
-        return redirect(url_for("index"))
+    return hex_palette
     
-    # Extract with Pylette
-    palette = Palette(image)
-    colors = palette.colors[:5] # Only top 5
-
-    # Sort colors by brightness
-    colors = sorted(colors, key=lambda color: color.brightness)
-
-    # Convert colors to hex
-    hex_colors = [color.hex_format() for color in colors]
-
-    return render_template("palette.html", hex_colors=hex_colors)
-
+# Homepage
+@app.route("/", methods=['GET', 'POST'])
+def home():
+    colors = None
+    if request.method == 'POST':
+        image_url = request.form['image_url']
+        colors = get_color_palette(image_url)
+    
+    return render_template('index.html', colors=colors)
 
 if __name__ == "__main__":
     app.run(debug=True)
