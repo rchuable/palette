@@ -1,6 +1,6 @@
 /* Basic styling for the body and layout */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Nunito', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;

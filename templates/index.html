@@ -11,6 +11,8 @@ References: https://www.w3schools.com/html/html_headings.asp
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Palette Extractor</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+
 </head>
 
 <body>
@@ -35,8 +37,8 @@ References: https://www.w3schools.com/html/html_headings.asp
         <h2>Extracted Color Palette:</h2>
         <div class="palette-container">
             {% for color in colors %}
-                <div class="color-box" style="background-color: {{ color }};">
-                    <span class="hex-code">{{ color }}</span>
+                <div class="color-box" style="background-color: {{ color.color }};">
+                    <span class="hex-code" style="color: {{ color.text_color }};">{{ color.color }}</span>
                 </div>
             {% endfor %}
         </div>
