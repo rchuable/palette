@@ -41,12 +41,6 @@ References: https://www.w3schools.com/html/html_headings.asp
             {% endfor %}
         </div>
 
-        <!-- Display color hex codes -->
-        <ul>
-            {% for color in colors %}
-                <li>{{ color }}</li>
-            {% endfor %}
-        </ul>
     {% else %}
         <p>Enter an image URL to extract a color palette.</p>
     {% endif %}
