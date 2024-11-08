@@ -160,8 +160,9 @@ def download_palette():
 @app.route("/save_palette", methods=['POST'])
 @login_required
 def save_palette():
+    name = request.form['name']
     colors = request.form['colors']
-    new_palette = Palette(colors=colors, owner=current_user)
+    new_palette = Palette(name=name, colors=colors, owner=current_user)
     db.session.add(new_palette)
     db.session.commit()
     return redirect(url_for('home'))
@@ -172,6 +173,18 @@ def save_palette():
 def view_palettes():
     palettes = Palette.query.filter_by(user_id=current_user.id).all()
     return render_template('view_palettes.html', palettes=palettes)
+
+# Delete palettes
+@app.route('/delete_palette/<int:palette_id>')
+@login_required
+def delete_palette(palette_id):
+    palette = Palette.query.get_or_404(palette_id)
+    if palette.owner != current_user:
+        abort(403)
+    db.session.delete(palette)
+    db.session.commit()
+    return redirect(url_for('view_palettes'))
+
 
 if __name__ == "__main__":
     app.run(debug=True)
