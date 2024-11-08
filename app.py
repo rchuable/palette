@@ -9,12 +9,14 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 '''
 
 # Import modules
-from flask import Flask, render_template, request, redirect, url_for
-#from pylette import Palette
-#from PIL import Image
+from flask import Flask, render_template, request, redirect, url_for, send_file
+#from pylette import Palette #this did not work
+#from PIL import Image #dependency for pylette
 from colorthief import ColorThief
 import requests
 from io import BytesIO
+from PIL import Image, ImageDraw, ImageFont
+import io
 
 # App setup
 app = Flask(__name__)
@@ -62,6 +64,37 @@ def home():
         colors = get_color_palette(image_url)
     
     return render_template('index.html', colors=colors)
+
+# Download
+@app.route("/download_palette")
+def download_palette():
+    colors = request.args.get('colors').split(',')
+    block size = (100, 150)
+    image_width = block_size[0] * len(colors)
+    image_height = block_size[1]
+    img = Image.new("RGB", (image_width, image_height), "white")
+    draw = ImageDraw.Draw(img)
+
+    # Font setup
+    try:
+        font = ImageFont.truetype("roboto.ttf", 15)
+    except IOError:
+        font = ImageFont.load_default()
+
+    for i, hex_color in enumerate(colors):
+        color_block = (i * block_size[0], 0, (i+1) * block_size[0], block_size[0])
+        draw.rectangle(color_block, fill=hex_color)
+
+        # Hex code under color
+        text_position = (i * block_size[0] + 10, block_size[0] + 10)
+        draw.text(text_position, hex_color, fill="black" if hex_color > "#7f7f7f" else "white", font=font)
+
+    # Save to an object
+    img_io = io.BytesIO()
+    img.save(img_io, 'PNG')
+    img_io.seek(0)
+    return send_file(img_io, mimetype="image/png", as_attachment=True, download_name="palette.png")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

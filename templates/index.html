@@ -46,5 +46,11 @@ References: https://www.w3schools.com/html/html_headings.asp
     {% else %}
         <p>Enter an image URL to extract a color palette.</p>
     {% endif %}
+
+    <!-- Show download button -->
+     <a href="{{ url_for('download_palette', colors=','.join([color.color for color in colors])) }}">
+        <button>Download Palette</button>
+     </a> 
+
 </body>
 </html>
