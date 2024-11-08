@@ -112,10 +112,10 @@ def login():
         if user and check_password_hash(user.password, password):
             login_user(user)
             flash('Login successful!', 'success')
+            # Redirect to saved palettes
             if 'colors' in session and 'name' in session:
                 return redirect(url_for('save_palette'))
-            else:
-                return redirect(url_for('home'))
+            return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html')
@@ -178,8 +178,13 @@ def save_palette():
         flash('Please log in to save your palette.', 'info')
         return redirect(url_for('login'))
 
-    colors = session.pop('colors', request.form['colors'])
-    name = session.pop('name', request.form['name'])
+    if request.method == 'POST':
+        colors = session.pop('colors', request.form['colors'])
+        name = session.pop('name', request.form['name'])
+    else:
+        colors = session.get('colors')
+        name = session.get('name')
+
     new_palette = Palette(name=name, colors=colors, owner=current_user)
     db.session.add(new_palette)
     db.session.commit()
