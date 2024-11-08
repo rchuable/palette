@@ -166,6 +166,12 @@ def save_palette():
     db.session.commit()
     return redirect(url_for('home'))
 
+# View saved palettes
+@app.route('/view_palettes')
+@login_required
+def view_palettes():
+    palettes = Palette.query.filter_by(user_id=current_user.id).all()
+    return render_template('view_palettes.html', palettes=palettes)
 
 if __name__ == "__main__":
     app.run(debug=True)
