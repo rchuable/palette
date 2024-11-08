@@ -43,10 +43,10 @@ def get_color_palette(url, color_count=5):
 
         # Get palette and hex code
         palette = color_thief.get_palette(color_count=color_count)
-        hex_palette = [{'color': '#{:02x}{:02x}{:02x}'.format(r, g, b), 
-                        'text_color': get_text_color('#{:02x}{:02x}{:02x}'.format(r, g, b))}
-                        for r, g, b in palette]
-        #hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
+        #hex_palette = [{'color': '#{:02x}{:02x}{:02x}'.format(r, g, b), 
+        #                'text_color': get_text_color('#{:02x}{:02x}{:02x}'.format(r, g, b))}
+        #                for r, g, b in palette]
+        hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
 
         return hex_palette
 

@@ -12,10 +12,11 @@ References: https://www.w3schools.com/html/html_headings.asp
     <title>Palette Extractor</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
-
 </head>
 
 <body>
+    <body style="font-family: 'Nunito', sans-serif;">
+
     <!-- Headings -->
     <h1>Palette Extractor</h1>
     <h5>A web-based application that lets you generate a color palette from an image URL using Color Thief</h5>
@@ -48,8 +49,8 @@ References: https://www.w3schools.com/html/html_headings.asp
     {% endif %}
 
     <!-- Show download button -->
-    <a href="{{ url_for('download_palette', colors=','.join([color.color for color in colors])) }}">
-        <button>Download Palette</button>
+    <a href="{{ url_for('download_palette', colors=colors_str) }}">
+        <button class="download-btn">Download Palette</button>
     </a> 
 
 </body>
