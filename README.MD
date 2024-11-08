@@ -8,7 +8,7 @@ Created to complete https://cs50.harvard.edu/x/2024/project/
 ![Screenshot](images/palette-extractor-1.jpg)
 
 ## Author's (or Artist's) Note
-I built this app so that I could link reference images which had colors that I liked. The palette extractor helps me build gradient maps for digital art so it's easier to adjust the tones and hues of an illustration. I hope that this simple tool will help other artists and designers.
+The artwork shown in the example is my own. I built this app so that I could link reference images which had colors that I liked. The palette extractor helps me build gradient maps for digital art so it's easier to adjust the tones and hues of an illustration. I hope that this simple tool will help other artists and designers.
 
 ## Features
 - Accepts image URLs as input
