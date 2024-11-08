@@ -181,3 +181,31 @@ button:hover {
 .action-btn:hover {
     background-color: #0b495f;
 }
+
+.flashes {
+    list-style-type: none;
+    padding: 0;
+}
+
+.flashes li {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: #fff;
+}
+
+.flashes li.info {
+    background-color: #5bc0de;
+}
+
+.flashes li.success {
+    background-color: #5cb85c;
+}
+
+.flashes li.danger {
+    background-color: #d9534f;
+}
+
+.flashes li.warning {
+    background-color: #f0ad4e;
+}

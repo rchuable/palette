@@ -2,20 +2,24 @@
 {% block title %}My Palettes{% endblock %}
 {% block content %}
     <h2>My Saved Palettes</h2>
-    <div class="saved-palettes">
-        {% for palette in palettes %}
-            <div class="palette-item">
-                <h3>{{ palette.name }}</h3>
-                <div class="palette-container">
-                    {% for color in palette.colors_with_text %}
-                        <div class="color-box" style="background-color: {{ color.color }};">
-                            <span class="hex-code" style="color: {{ color.text_color }};">{{ color.color }}</span>
-                        </div>
-                    {% endfor %}
+    {% if palettes %}
+        <div class="saved-palettes">
+            {% for palette in palettes %}
+                <div class="palette-item">
+                    <h3>{{ palette.name }}</h3>
+                    <div class="palette-container">
+                        {% for color in palette.colors_with_text %}
+                            <div class="color-box" style="background-color: {{ color.color }};">
+                                <span class="hex-code" style="color: {{ color.text_color }};">{{ color.color }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    <a href="{{ url_for('download_palette', colors=palette.colors) }}" class="action-btn">Download</a>
+                    <a href="{{ url_for('delete_palette', palette_id=palette.id) }}" class="action-btn">Delete</a>
                 </div>
-                <a href="{{ url_for('download_palette', colors=palette.colors) }}" class="action-btn">Download</a>
-                <a href="{{ url_for('delete_palette', palette_id=palette.id) }}" class="action-btn">Delete</a>
-            </div>
-        {% endfor %}
-    </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>There are no saved palettes yet. Go to <a href="{{ url_for('home') }}">Home</a> to save a palette or <a href="{{ url_for('login') }}">login</a> to access your previously saved palettes.</p>
+    {% endif %}
 {% endblock %}
