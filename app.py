@@ -89,10 +89,16 @@ def get_color_palette(url, color_count=5):
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'], method='pbkdf2:sha256')
-        new_user = User(username=username, password=password)
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user:
+            flash('Username already exists. Please choose a different one.', 'danger')
+            return redirect(url_for('register'))
+        hashed_password = generate_password_hash(password, method='pbkdf2:sha256')
+        new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
+        flash('Registration successful! You can now log in.', 'success')
         return redirect(url_for('login'))
     return render_template('register.html')
 
@@ -136,6 +142,7 @@ def home():
 @app.route("/download_palette")
 def download_palette():
     colors = request.args.get('colors').split(',')
+    filename = request.args.get('filename', 'palette')
     block_size = (100, 150)
     image_width = block_size[0] * len(colors)
     image_height = block_size[1]
@@ -160,7 +167,7 @@ def download_palette():
     img_io = io.BytesIO()
     img.save(img_io, 'PNG')
     img_io.seek(0)
-    return send_file(img_io, mimetype="image/png", as_attachment=True, download_name="palette.png")
+    return send_file(img_io, mimetype="image/png", as_attachment=True, download_name=f"{filename}.png")
 
 # Save
 @app.route("/save_palette", methods=['POST'])

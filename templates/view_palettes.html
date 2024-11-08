@@ -14,7 +14,7 @@
                             </div>
                         {% endfor %}
                     </div>
-                    <a href="{{ url_for('download_palette', colors=palette.colors) }}" class="action-btn">Download</a>
+                    <a href="{{ url_for('download_palette', colors=palette.colors, filename='palette_' ~ palette.name) }}" class="action-btn">Download</a>
                     <a href="{{ url_for('delete_palette', palette_id=palette.id) }}" class="action-btn">Delete</a>
                 </div>
             {% endfor %}
