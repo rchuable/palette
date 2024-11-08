@@ -39,7 +39,7 @@ References: https://www.w3schools.com/html/html_headings.asp
             <img src="{{ request.form['image_url'] }}" alt="Image preview" style="max-width: 100%; height: auto;">
         {% endif %}
 
-    <!-- Display the generated color palette -->
+    <!-- Display the extracted color palette -->
         <h2>Extracted Color Palette:</h2>
         <div class="palette-container">
             {% for color in colors %}
@@ -49,7 +49,7 @@ References: https://www.w3schools.com/html/html_headings.asp
             {% endfor %}
         </div>
 
-    <!-- Show download button -->
+    <!-- Show download & save buttons -->
     {% if colors_str %}
         <a href="{{ url_for('download_palette', colors=colors_str) }}">
             <button class="download-btn">Download Palette</button>
