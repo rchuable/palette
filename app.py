@@ -13,6 +13,7 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 from flask import Flask, render_template, request, redirect, url_for, send_file, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, login_required
+from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from colorthief import ColorThief
 import requests
@@ -32,11 +33,11 @@ login_manager.login_view = 'login'
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Columm(db.String(150), nullable=False)
+    password = db.Column(db.String(150), nullable=False)
     palettes = db.relationship('Palette', backref='owner', lazy=True)
 
 class Palette(db.Model):
-    id = db.Columm(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     colors = db.Column(db.String(200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -44,6 +45,8 @@ class Palette(db.Model):
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# After initializing
+migrate = Migrate(app, db)
 
 # FUNCTIONS ---
 
@@ -84,7 +87,7 @@ def get_color_palette(url, color_count=5):
 def register():
     if request.method == 'POST':
         username = request.form['username']
-        password = generate_password_hash(request.form['password'], method='sha256')
+        password = generate_password_hash(request.form['password'], method='pbkdf2:sha256')
         new_user = User(username=username, password=password)
         db.session.add(new_user)
         db.session.commit()

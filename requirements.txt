@@ -3,3 +3,5 @@ pylette
 colorthief
 pillow
 flask-login
+flask_sqlalchemy
+Flask-Migrate
