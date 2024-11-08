@@ -184,6 +184,14 @@ def save_palette():
 @login_required
 def view_palettes():
     palettes = Palette.query.filter_by(user_id=current_user.id).all()
+
+    for palette in palettes:
+        colors_with_text = [
+            {'color': hex_color, 'text_color': get_text_color(hex_color)}
+            for hex_color in palette.colors.split(',')
+        ]
+        palette.colors_with_text = colors_with_text
+
     return render_template('view_palettes.html', palettes=palettes)
 
 # Delete palettes
