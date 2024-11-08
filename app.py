@@ -9,7 +9,7 @@ https://pytutorial.com/how-to-solve-modulenotfounderror-no-module-named-in-pytho
 https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-the-dominant-color-of-multiple-images
 '''
 
-# Import modules
+# Main app setup
 from flask import Flask, render_template, request, redirect, url_for, send_file, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
@@ -31,6 +31,7 @@ login_manager.init_app(app)
 login_manager.login_view = 'login'
 
 # SQL tables
+# Citing: Copilot for help
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -194,6 +195,7 @@ def save_palette():
     return redirect(url_for('home'))
 
 # Save (from login)
+# Citing help from ChatGPT and Copilot
 @app.route("/complete_save_palette")
 @login_required
 def complete_save_palette():
