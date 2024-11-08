@@ -62,14 +62,14 @@ def home():
     if request.method == 'POST':
         image_url = request.form['image_url']
         colors = get_color_palette(image_url)
-    
-    return render_template('index.html', colors=colors)
+    colors_str = ','.join(colors) if colors else None
+    return render_template('index.html', colors=colors, colors_str=colors_str)
 
 # Download
 @app.route("/download_palette")
 def download_palette():
     colors = request.args.get('colors').split(',')
-    block size = (100, 150)
+    block_size = (100, 150)
     image_width = block_size[0] * len(colors)
     image_height = block_size[1]
     img = Image.new("RGB", (image_width, image_height), "white")

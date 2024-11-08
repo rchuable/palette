@@ -48,9 +48,9 @@ References: https://www.w3schools.com/html/html_headings.asp
     {% endif %}
 
     <!-- Show download button -->
-     <a href="{{ url_for('download_palette', colors=','.join([color.color for color in colors])) }}">
+    <a href="{{ url_for('download_palette', colors=','.join([color.color for color in colors])) }}">
         <button>Download Palette</button>
-     </a> 
+    </a> 
 
 </body>
 </html>
