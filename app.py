@@ -12,7 +12,7 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 # Import modules
 from flask import Flask, render_template, request, redirect, url_for, send_file, flash, session
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, login_required, current_user
+from flask_login import UserMixin, LoginManager, login_user, login_required, logout_user, current_user
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from colorthief import ColorThief
@@ -85,6 +85,7 @@ def get_color_palette(url, color_count=5):
 
 
 # Registration
+# look at this security! I'm using hashed passwords :)
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -114,7 +115,7 @@ def login():
             flash('Login successful!', 'success')
             # Redirect to saved palettes
             if 'colors' in session and 'name' in session:
-                return redirect(url_for('save_palette'))
+                return redirect(url_for('complete_save_palette'))
             return redirect(url_for('home'))
         else:
             flash('Login Unsuccessful. Please check username and password', 'danger')
@@ -125,6 +126,7 @@ def login():
 @login_required
 def logout():
     logout_user()
+    flash('You have been logged out.', 'success')
     return redirect(url_for('home'))
 
 # Homepage
@@ -189,6 +191,19 @@ def save_palette():
     db.session.add(new_palette)
     db.session.commit()
     flash('Palette saved successfully! Go to My Palettes to view.', 'success')
+    return redirect(url_for('home'))
+
+# Save (from login)
+@app.route("/complete_save_palette")
+@login_required
+def complete_save_palette():
+    colors = session.pop('colors', None)
+    name = session.pop('name', None)
+    if colors and name:
+        new_palette = Palette(name=name, colors=colors, owner=current_user)
+        db.session.add(new_palette)
+        db.session.commit()
+        flash('Palette saved successfully!', 'success')
     return redirect(url_for('home'))
 
 # View saved palettes
