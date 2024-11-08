@@ -14,9 +14,8 @@ References: https://www.w3schools.com/html/html_headings.asp
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
-    <body style="font-family: 'Nunito', sans-serif;">
-
+<body style="font-family: 'Nunito', sans-serif;">
+    
     <!-- Headings -->
     <h1>Palette Extractor</h1>
     <h5>A web-based application that lets you generate a color palette from an image URL using Color Thief</h5>
@@ -32,7 +31,9 @@ References: https://www.w3schools.com/html/html_headings.asp
     <!-- Display image preview -->
      {% if colors %}
         <h2>Image Preview:</h2>
-        <img src="{{ request.form['image_url'] }}" alt="Image preview" style="max-width: 100%; height: auto;">
+        {% if request.form.get('image_url') %}
+            <img src="{{ request.form['image_url'] }}" alt="Image preview" style="max-width: 100%; height: auto;">
+        {% endif %}
 
     <!-- Display the generated color palette -->
         <h2>Extracted Color Palette:</h2>
@@ -44,14 +45,16 @@ References: https://www.w3schools.com/html/html_headings.asp
             {% endfor %}
         </div>
 
+    <!-- Show download button -->
+    {% if colors_str %}
+        <a href="{{ url_for('download_palette', colors=colors_str) }}">
+            <button class="download-btn">Download Palette</button>
+        </a> 
+    {% endif %}
+
     {% else %}
         <p>Enter an image URL to extract a color palette.</p>
     {% endif %}
-
-    <!-- Show download button -->
-    <a href="{{ url_for('download_palette', colors=colors_str) }}">
-        <button class="download-btn">Download Palette</button>
-    </a> 
-
+    
 </body>
 </html>
