@@ -1,15 +1,13 @@
 # PALETTE EXTRACTOR
 #### Video Demo:  https://www.youtube.com/watch?v=8td-xT_DF4w&t
 #### Description: 
-Palette Extractor is a web-based application I designed to help artists like myself along with designers and basically anyone interested in color theory to extract a palette. The palettes extracted through this tool contain between two to give dominant colors measured by frequency from any image URL. This application is built with Flask, a lightweight web framework for Python, and utilizes the Color Thief library to analyze images and extract the most prominent colors. Each color in the palette is accompanied by its hex code, which can be downloaded as an image file or saved online with a free account, to make it easy to use in digital projects. Why did I use Color Thief instead of Pylette? Simply, Pylette wasn't working for my script.
+Palette Extractor is a web-based application I designed to help artists like myself along with designers and basically anyone interested in color theory to extract a palette. The palettes extracted through this tool contain between two to give dominant colors measured by frequency from any image URL. This application is built with Flask, a lightweight web framework for Python, and utilizes the Color Thief library to analyze images and extract the most prominent colors. Each color in the palette is accompanied by its hex code, which can be downloaded as an image file or saved online with a free account, to make it easy to use in digital projects. Why did I use Color Thief instead of Pylette? Simply, Pylette wasn't working for my script ¯\_(ツ)_/¯
 
 The primary goal of Palette Extractor is to simplify the process of color extraction and provide user-friendly interface for users like me to interact with. Whether you're working on digital art, web design, or any other creative project, this application makes it easy to identify and use the colors of an image that inspires you. By simply entering an image URL, users can quickly generate an image preview, a palette of dominant colors, and the palette's hex codes for easy reference.
 
-Rather than uploading images, I chose to extract via URL to encourage artists to save their references online rather than locally. As you create more and more digital art pieces, you use up more storage space and that also leads to clutter in your machine. It is more streamlined to do things online and save references on the cloud, whether that's an image-storing service like Google Photos or an image-curating service like Pinterest. I also chose to use image URLs because, if an artist has blocked their image from being downloaded, I believe you need to respect the implicit "please don't use my art or images without permission" request from the creator; don't just screenshot and grab the image.
-
 In terms of functionality, Palette Extractor offers a range of features designed to make color extraction simple and efficient:
 - **Accepts Image URLs as Input**: Users can input any image URL to extract colors from the image.
-- **Extract a Color Palette**: The application can generate a palette containing two to five colors, depending on what's available or extractable in the linked image.
+- **Extracts a Color Palette**: The application can generate a palette containing two to five colors, depending on what's available or extractable in the linked image.
 - **Displays Hex Codes**: Each color in the palette is displayed with its corresponding hex code, which is essential for accurate color picking in digital art and design.
 - **Simple and Clean UI**: The user interface is designed to be intuitive and easy to navigate.
 - **Download Palette as Image**: Users can optionally download the extracted palette as a PNG image for easy reference and use in other applications.
@@ -27,6 +25,24 @@ In terms of file contents, here's a breakdown of what each file contains and doe
     - **view_palettes.html**: The template for the page where authenticated and logged in users can view their saved palettes, download those saved palettes, or delete saved palettes they no longer need.
 - **static/**: This directory contains static files such as CSS files.
 	- **style.css**: The main CSS file that defines the styles for the application to make sure my application follows a consistent and visually appealing design. Ah, this takes me back to Gaia Online days.
+- **__pycache__**: These folders (standalone, within `migrations`, and within `versions`) all simply store compiled Python bytecode files, which help the application run faster by simply reusing these cached files. For example, `app.cpython-312.pyc` is a cached compiled file for the main app to make the application launch faster.
+- **images**: This folder contains an image asset for my project. It holds `palette-extractor-1.jpg` to present a screenshot of what the homepage of the app looks like for the `README` file.
+- **instance**: This folder stores database file `users.db` where sensitive and instance-specific data goes.
+- **migrations**: This folder contains database migration files for tracking schema changes in the database. Files inside help version control for the database structure.
+- **alembic.ini** and **script.py.mako**: These are configuration files for Alembic, a tool that manages and applies database migrations.
+
+Now let's talk about **design choices**.
+Rather than uploading images, I chose to extract via URL to encourage artists to save their references online rather than locally. As you create more and more digital art pieces, you use up more storage space and that also leads to clutter in your machine. It is more streamlined to do things online and save references on the cloud, whether that's an image-storing service like Google Photos or an image-curating service like Pinterest. I also chose to use image URLs because, if an artist has blocked their image from being downloaded, I believe you need to respect the implicit "please don't use my art or images without permission" request from the creator; don't just screenshot and grab the image.
+
+I chose the Flask framework for its simplicity and flexibility. It was introduced in Week 9 and, while I found it challenging at first, it's been a go-to for me now when thinking about containerization and building web-based application. It's like the first time I learned about streamlit for lightweight dashboard prototyping.
+
+As mentioned earlier, I opted for the Color Thief library over Pylette simply because it worked. It extracted dominant colors from images very accurately and it's efficient and easy to use.
+
+For users and saved palette management, using a combination of Flask-login with SQLite database were sufficient for the needs of this application. I wanted it to be usable even without a login but very easy to store and track palettes if a user chose to create an account. It made for a seamless user experience.
+
+**A few more thoughts...**
+Overall, I just wanted to create a simple app for my simple need: getting color palettes from reference images. While it has a simple utility, it is far from simple. It was rather complex to set everything up, but I'm happy to see it in a functional and streamlined state. One day, I hope to get this on its on webpage or integrated in a bigger software product that I'll make. It's an exciting opportunity ahead!
+
 
 Created to complete https://cs50.harvard.edu/x/2024/project/
 
@@ -60,12 +76,26 @@ git clone https://github.com/rchuable/palette.git
 cd palette
 ```
 2. Create a virtual environment:
-`python -m venv venv`
+```
+python -m venv venv
+```
 3. Activate the virual environment
-- On Windows: `venv\Scripts\activate` or `./venv/Scripts/activate`
-- On macOS/Linux: `source venv/bin/activate`
+- On Windows: 
+```
+venv\Scripts\activate
+``` 
+or 
+```
+./venv/Scripts/activate
+```
+- On macOS/Linux: 
+```
+source venv/bin/activate
+```
 4. Install dependencies:
-`pip install -r requirements.txt`
+```
+pip install -r requirements.txt
+```
 5. Set up the database:
 ```
 flask db init
@@ -73,7 +103,9 @@ flask db migrate -m "Initial migration."
 flask db upgrade
 ```
 6. Run the application:
-`flask run`
+```
+flask run
+```
 7. Open the application in your browser:
 Go to `http://127.0.0.1:5000`
 
