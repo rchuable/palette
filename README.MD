@@ -12,7 +12,9 @@ I built this app so that I could link reference images which had colors that I l
 - Accepts image URLs as input
 - Generates a color palette (2-5 colors)
 - Displays hex codes for each color
-- Simple UI
+- Simple and clean UI
+- Option to download the palette as an image
+- Save and view palettes with a free account
 
 ## Technologies Used
 - Flask: Web framework
@@ -20,9 +22,33 @@ I built this app so that I could link reference images which had colors that I l
 - HTML/CSS: Front-end styling
 
 ## Setup
--
--
--
+### Prerequisites
+- Python 3.7+
+- pip
+
+### Installation
+1. Clone the repository:
+```
+git clone https://github.com/rchuable/palette.git
+cd palette
+```
+2. Create a virtual environment:
+`python -m venv venv`
+3. Activate the virual environment
+- On Windows: `venv\Scripts\activate`
+- On macOS/Linux: `source venv/bin/activate`
+4. Install dependencies:
+`pip install -r requirements.txt`
+5. Set up the database:
+```
+flask db init
+flask db migrate -m "Initial migration."
+flask db upgrade
+```
+6. Run the application:
+`flask run`
+7. Open the application in your browser:
+Go to `http://127.0.0.1:5000`
 
 ## License
 This project is licensed under the MIT License. See LICENSE for more information.
