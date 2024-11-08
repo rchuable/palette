@@ -2,3 +2,4 @@ flask
 pylette
 colorthief
 pillow
+flask-login

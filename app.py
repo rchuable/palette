@@ -10,17 +10,40 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 '''
 
 # Import modules
-from flask import Flask, render_template, request, redirect, url_for, send_file
-#from pylette import Palette #this did not work
-#from PIL import Image #dependency for pylette
+from flask import Flask, render_template, request, redirect, url_for, send_file, flash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, LoginManager, login_user, login_required
+from werkzeug.security import generate_password_hash, check_password_hash
 from colorthief import ColorThief
 import requests
+import io
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
-import io
 
-# App setup
+# App setup & initialize Database
 app = Flask(__name__)
+app.config['SECRET_KEY'] = '@itsameregiC!369damnshefine'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+db = SQLAlchemy(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(150), unique=True, nullable=False)
+    password = db.Columm(db.String(150), nullable=False)
+    palettes = db.relationship('Palette', backref='owner', lazy=True)
+
+class Palette(db.Model):
+    id = db.Columm(db.Integer, primary_key=True)
+    colors = db.Column(db.String(200), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
 
 # FUNCTIONS ---
 
@@ -55,6 +78,39 @@ def get_color_palette(url, color_count=5):
         hex_download = ["#FFFFFF"] * color_count
         return hex_display, hex_download
 
+
+# Registration
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = generate_password_hash(request.form['password'], method='sha256')
+        new_user = User(username=username, password=password)
+        db.session.add(new_user)
+        db.session.commit()
+        return redirect(url_for('login'))
+    return render_template('register.html')
+
+# Login
+@app.route('/login', methods=['GET','POST'])
+def login():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username).first()
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password','danger')
+    return render_template('login.html')
+
+# Logout
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
 
 # Homepage
 @app.route("/", methods=['GET', 'POST'])
@@ -96,6 +152,16 @@ def download_palette():
     img.save(img_io, 'PNG')
     img_io.seek(0)
     return send_file(img_io, mimetype="image/png", as_attachment=True, download_name="palette.png")
+
+# Save
+@app.route("/save_palette", methods=['POST'])
+@login_required
+def save_palette():
+    colors = request.form['colors']
+    new_palette = Palette(colors=colors, owner=current_user)
+    db.session.add(new_palette)
+    db.session.commit()
+    return redirect(url_for('home'))
 
 
 if __name__ == "__main__":

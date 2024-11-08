@@ -49,7 +49,11 @@ References: https://www.w3schools.com/html/html_headings.asp
     {% if colors_str %}
         <a href="{{ url_for('download_palette', colors=colors_str) }}">
             <button class="download-btn">Download Palette</button>
-        </a> 
+        </a>
+        <form method="POST" action="{{ url_for('save_palette') }}">
+            <input type="hidden" name="colors" value="{{ colors_str }}">
+            <button type="submit" class="download-btn">Save Palette</button>
+        </form>
     {% endif %}
 
     {% else %}
