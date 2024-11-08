@@ -10,7 +10,7 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 '''
 
 # Import modules
-from flask import Flask, render_template, request, redirect, url_for, send_file, flash
+from flask import Flask, render_template, request, redirect, url_for, send_file, flash, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, login_user, login_required, current_user
 from flask_migrate import Migrate
@@ -30,6 +30,7 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 
+# SQL tables
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
@@ -38,6 +39,7 @@ class User(db.Model, UserMixin):
 
 class Palette(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
     colors = db.Column(db.String(200), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
@@ -95,7 +97,7 @@ def register():
     return render_template('register.html')
 
 # Login
-@app.route('/login', methods=['GET','POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
         username = request.form['username']
@@ -103,10 +105,15 @@ def login():
         user = User.query.filter_by(username=username).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for('home'))
+            flash('Login successful!', 'success')
+            if 'colors' in session and 'name' in session:
+                return redirect(url_for('save_palette'))
+            else:
+                return redirect(url_for('home'))
         else:
-            flash('Login Unsuccessful. Please check username and password','danger')
+            flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html')
+
 
 # Logout
 @app.route('/logout')
@@ -162,13 +169,15 @@ def save_palette():
     if not current_user.is_authenticated:
         session['colors'] = request.form['colors']
         session['name'] = request.form['name']
+        flash('Please log in to save your palette.', 'info')
         return redirect(url_for('login'))
-        
+
     colors = session.pop('colors', request.form['colors'])
     name = session.pop('name', request.form['name'])
     new_palette = Palette(name=name, colors=colors, owner=current_user)
     db.session.add(new_palette)
     db.session.commit()
+    flash('Palette saved successfully!', 'success')
     return redirect(url_for('home'))
 
 # View saved palettes
