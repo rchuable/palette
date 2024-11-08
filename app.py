@@ -1,7 +1,8 @@
 '''
 Project:    CS50 Week 10
 Author:     Regina Chua
-Note:       This project will basically run pylette in a flask web app.
+Note:       This project will basically run color thief in a flask web app with
+            added dynamic display and download functionality.
 References: 
 https://github.com/qTipTip/Pylette
 https://pytutorial.com/how-to-solve-modulenotfounderror-no-module-named-in-python/
@@ -33,8 +34,6 @@ def get_text_color(hex_color):
 def get_color_palette(url, color_count=5):
     try:
         response = requests.get(url)
-        
-        # Handling invalid URLs
         response.raise_for_status()
 
         # Get image and apply color thief
@@ -43,27 +42,30 @@ def get_color_palette(url, color_count=5):
 
         # Get palette and hex code
         palette = color_thief.get_palette(color_count=color_count)
-        #hex_palette = [{'color': '#{:02x}{:02x}{:02x}'.format(r, g, b), 
-        #                'text_color': get_text_color('#{:02x}{:02x}{:02x}'.format(r, g, b))}
-        #                for r, g, b in palette]
-        hex_palette = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
-
-        return hex_palette
-
-    # White palette if error
+        hex_display = [{'color': '#{:02x}{:02x}{:02x}'.format(r, g, b), 
+                        'text_color': get_text_color('#{:02x}{:02x}{:02x}'.format(r, g, b))}
+                        for r, g, b in palette]
+        hex_download = ['#{:02x}{:02x}{:02x}'.format(r, g, b) for r, g, b in palette]
+        
+        return hex_display, hex_download
+    
+    # Handling palette errors
     except requests.exceptions.RequestException:
-        return["#FFFFFF"] * color_count
+        hex_display = [{'color': '#FFFFFF', 'text_color': "#000000"}] * color_count
+        hex_download = ["#FFFFFF"] * color_count
+        return hex_display, hex_download
 
 
 # Homepage
 @app.route("/", methods=['GET', 'POST'])
 def home():
-    colors = None
+    colors_display = None
+    colors_download = None
     if request.method == 'POST':
         image_url = request.form['image_url']
-        colors = get_color_palette(image_url)
-    colors_str = ','.join(colors) if colors else None
-    return render_template('index.html', colors=colors, colors_str=colors_str)
+        colors_display, colors_download = get_color_palette(image_url)
+    colors_str = ','.join(colors_download) if colors_download else None
+    return render_template('index.html', colors=colors_display, colors_str=colors_str)
 
 # Download
 @app.route("/download_palette")
@@ -82,12 +84,12 @@ def download_palette():
         font = ImageFont.load_default()
 
     for i, hex_color in enumerate(colors):
-        color_block = (i * block_size[0], 0, (i+1) * block_size[0], block_size[0])
+        color_block = (i * block_size[0], 0, (i+1) * block_size[0], block_size[1])
         draw.rectangle(color_block, fill=hex_color)
 
         # Hex code under color
-        text_position = (i * block_size[0] + 10, block_size[0] + 10)
-        draw.text(text_position, hex_color, fill="black" if hex_color > "#7f7f7f" else "white", font=font)
+        text_position = (i * block_size[0] + 10, block_size[1] - 20)
+        draw.text(text_position, hex_color, fill=get_text_color(hex_color), font=font)
 
     # Save to an object
     img_io = io.BytesIO()
