@@ -12,7 +12,7 @@ https://stackoverflow.com/questions/75404012/how-can-i-use-colorthief-to-obtain-
 # Import modules
 from flask import Flask, render_template, request, redirect, url_for, send_file, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import UserMixin, LoginManager, login_user, login_required
+from flask_login import UserMixin, LoginManager, login_user, login_required, current_user
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from colorthief import ColorThief
@@ -158,10 +158,14 @@ def download_palette():
 
 # Save
 @app.route("/save_palette", methods=['POST'])
-@login_required
 def save_palette():
-    name = request.form['name']
-    colors = request.form['colors']
+    if not current_user.is_authenticated:
+        session['colors'] = request.form['colors']
+        session['name'] = request.form['name']
+        return redirect(url_for('login'))
+        
+    colors = session.pop('colors', request.form['colors'])
+    name = session.pop('name', request.form['name'])
     new_palette = Palette(name=name, colors=colors, owner=current_user)
     db.session.add(new_palette)
     db.session.commit()
