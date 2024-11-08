@@ -25,7 +25,8 @@ In terms of file contents, here's a breakdown of what each file contains and doe
     - **login.html**: The template for the login page where registered user can log in their account to access saved palettes. Alternatively, if an unauthenticated user attempts to save an extracted palette, the user will be redirected here to login. That saved palette will be automatically saved to their account since it can pull the data from the current session.
     - **register.html**: If a user does not have a login, the user is encouraged to go here. The template for the registration page where users can create a free, new account to access saved palettes.
     - **view_palettes.html**: The template for the page where authenticated and logged in users can view their saved palettes, download those saved palettes, or delete saved palettes they no longer need.
-- **static/**
+- **static/**: This directory contains static files such as CSS files.
+	- **style.css**: The main CSS file that defines the styles for the application to make sure my application follows a consistent and visually appealing design. Ah, this takes me back to Gaia Online days.
 
 Created to complete https://cs50.harvard.edu/x/2024/project/
 
