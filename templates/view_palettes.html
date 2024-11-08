@@ -1,11 +1,19 @@
 {% extends "base.html" %}
 {% block title %}My Palettes{% endblock %}
 {% block content %}
+
     <h2>My Saved Palettes</h2>
     <ul>
         {% for palette in palettes %}
             <li>
-                <span>{{ palette.name }}</span>
+                <h3>{{ palette.name }}</h3>
+                <div class="palette-container">
+                    {% for hex_color in palette.colors.split(',') %}
+                        <div class="color-box" style="background-color: {{ hex_color }};">
+                            <span class="hex-code">{{ hex_color }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
                 <a href="{{ url_for('delete_palette', palette_id=palette.id) }}">Delete</a>
             </li>
         {% endfor %}

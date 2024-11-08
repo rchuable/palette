@@ -114,7 +114,6 @@ def login():
             flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html')
 
-
 # Logout
 @app.route('/logout')
 @login_required
@@ -177,7 +176,7 @@ def save_palette():
     new_palette = Palette(name=name, colors=colors, owner=current_user)
     db.session.add(new_palette)
     db.session.commit()
-    flash('Palette saved successfully!', 'success')
+    flash('Palette saved successfully! Go to My Palettes to view.', 'success')
     return redirect(url_for('home'))
 
 # View saved palettes
