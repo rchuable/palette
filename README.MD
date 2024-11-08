@@ -1,5 +1,5 @@
 # PALETTE EXTRACTOR
-#### Video Demo:  <URL HERE>
+#### Video Demo:  https://www.youtube.com/watch?v=8td-xT_DF4w&t
 #### Description:
 Palette Extractor is a web-based application that extracts a palette--containing up to five dominant colors--from any image URL. This application is built with Flask and uses the Color Thief libraray. Hex codes accompany the palette for reference.
 
