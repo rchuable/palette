@@ -3,6 +3,8 @@
 #### Description: 
 Palette Extractor is a web-based application I designed to help artists like myself along with designers and basically anyone interested in color theory to extract a palette. The palettes extracted through this tool contain between two to give dominant colors measured by frequency from any image URL. This application is built with Flask, a lightweight web framework for Python, and utilizes the Color Thief library to analyze images and extract the most prominent colors. Each color in the palette is accompanied by its hex code, which can be downloaded as an image file or saved online with a free account, to make it easy to use in digital projects. Why did I use Color Thief instead of Pylette? Simply, Pylette wasn't working for my script ¯\_(ツ)_/¯
 
+![Screenshot of palette extractor interface](images/palette-extractor-1.jpg)
+
 The primary goal of Palette Extractor is to simplify the process of color extraction and provide user-friendly interface for users like me to interact with. Whether you're working on digital art, web design, or any other creative project, this application makes it easy to identify and use the colors of an image that inspires you. By simply entering an image URL, users can quickly generate an image preview, a palette of dominant colors, and the palette's hex codes for easy reference.
 
 In terms of functionality, Palette Extractor offers a range of features designed to make color extraction simple and efficient:
@@ -41,8 +43,6 @@ Overall, I just wanted to create a simple app for my simple need: getting color 
 
 
 Created to complete https://cs50.harvard.edu/x/2024/project/
-
-![Screenshot](images/palette-extractor-1.jpg)
 
 ## Author's (or Artist's) Note
 The artwork shown in the example is my own. I built this app so that I could link reference images which had colors that I liked. The palette extractor helps me build gradient maps for digital art so it's easier to adjust the tones and hues of an illustration. I hope that this simple tool will help other artists and designers.
